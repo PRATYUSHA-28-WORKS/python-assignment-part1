@@ -1,4 +1,11 @@
-### --- Task 1: Data Parsing & Profile Cleaning --- ###
+# =========================================================
+# Student Grade Tracker
+# Assignment Part 1 - Python Basics & Control Flow
+# =========================================================
+
+# -----------------------------
+# Task 1 — Data Parsing & Profile Cleaning
+# -----------------------------
 
 raw_students = [
     {"name": "  ayesha SHARMA  ", "roll": "101", "marks_str": "88, 72, 95, 60, 78"},
@@ -8,103 +15,135 @@ raw_students = [
     {"name": " Sneha pillai ",    "roll": "105", "marks_str": "75, 80, 70, 68, 85"},
 ]
 
-cleaned_students = []
-
-print("--- Task 1: Student Profiles ---")
+print("\n--- Student Profile Cards ---\n")
 
 for student in raw_students:
-    # 1. Clean the name: strip whitespace and convert to Title Case
+
+    # Clean the name (remove spaces and convert to title case)
     clean_name = student["name"].strip().title()
+
+    # Convert roll number to integer
+    roll = int(student["roll"])
     
-    # 2. Convert roll to integer
-    clean_roll = int(student["roll"])
-    
-    # 3. Convert marks_str to a list of integers
-    # We split by ", " then use a list comprehension to convert each string to int
-    clean_marks = [int(m) for m in student["marks_str"].split(", ")]
-    
-    # 4. Verify name validity (only alphabetic characters)
-    # join then check isalpha handles multiple words
-    is_valid = all(word.isalpha() for word in clean_name.split())
-    valid_status = "✓ Valid name" if is_valid else "✗ Invalid name"
-    
-    # Store cleaned data
-    cleaned_info = {"name": clean_name, "roll": clean_roll, "marks": clean_marks}
-    cleaned_students.append(cleaned_info)
-    
-    # 5. Print Profile Card
-    print(f"{valid_status}")
+
+    # Convert marks string to list of integers
+    marks_split = student["marks_str"].split(",")
+    marks = []
+
+    for m in marks_split:
+        marks.append(int(m.strip()))
+
+    # Validate name (check each word contains only letters)
+    valid_name = True
+    for word in clean_name.split():
+        if not word.isalpha():
+            valid_name = False
+
+    if valid_name:
+        validation = "✓ Valid name"
+    else:
+        validation = "✗ Invalid name"
+
+    # Print student profile
     print("================================")
     print(f"Student : {clean_name}")
-    print(f"Roll No : {clean_roll}")
-    print(f"Marks   : {clean_marks}")
+    print(f"Roll No : {roll}")
+    print(f"Marks   : {marks}")
+    print(validation)
     print("================================")
 
-# 6. Specific operation for roll 103
-for s in cleaned_students:
-    if s["roll"] == 103:
-        print(f"\nRoll 103 - Uppercase: {s['name'].upper()}")
-        print(f"Roll 103 - Lowercase: {s['name'].lower()}\n")
+    # If roll number is 103 print uppercase and lowercase name
+    if roll == 103:
+        print("\nSpecial Output for Roll 103")
+        print(clean_name.upper())
+        print(clean_name.lower())
+        print()
 
+# -----------------------------
+# Task 2 — Marks Analysis
+# -----------------------------
 
-### --- Task 2: Marks Analysis --- ###
+print("\n--- Marks Analysis ---\n")
 
-print("\n--- Task 2: Marks Analysis ---")
 student_name = "Ayesha Sharma"
 subjects = ["Math", "Physics", "CS", "English", "Chemistry"]
 marks = [88, 72, 95, 60, 78]
 
-# 1. Print subject grades
+# Loop through subjects and assign grade
 for i in range(len(subjects)):
-    m = marks[i]
-    if m >= 90: grade = "A+"
-    elif m >= 80: grade = "A"
-    elif m >= 70: grade = "B"
-    elif m >= 60: grade = "C"
-    else: grade = "F"
-    print(f"{subjects[i]}: {m} ({grade})")
 
-# 2. Calculations
-total_marks = sum(marks)
-avg_marks = total_marks / len(marks)
-high_idx = marks.index(max(marks))
-low_idx = marks.index(min(marks))
+    score = marks[i]
 
-print(f"\nTotal Marks: {total_marks}")
-print(f"Average Marks: {avg_marks:.2f}")
-print(f"Highest: {subjects[high_idx]} ({marks[high_idx]})")
-print(f"Lowest: {subjects[low_idx]} ({marks[low_idx]})")
-
-# 3. While Loop for User Input
-print("\n--- New Subject Entry (Type 'done' to stop) ---")
-new_subjects_count = 0
-while True:
-    sub_input = input("Enter subject name: ").strip()
-    if sub_input.lower() == 'done':
-        break
-    
-    marks_input = input(f"Enter marks for {sub_input}: ")
-    
-    # Validation logic
-    if marks_input.isdigit():
-        m_val = int(marks_input)
-        if 0 <= m_val <= 100:
-            subjects.append(sub_input)
-            marks.append(m_val)
-            new_subjects_count += 1
-        else:
-            print("Warning: Marks must be between 0 and 100.")
+    # Grade logic
+    if score >= 90:
+        grade = "A+"
+    elif score >= 80:
+        grade = "A"
+    elif score >= 70:
+        grade = "B"
+    elif score >= 60:
+        grade = "C"
     else:
-        print("Warning: Please enter a valid numeric value.")
+        grade = "F"
 
-updated_avg = sum(marks) / len(marks)
-print(f"\nNew subjects added: {new_subjects_count}")
-print(f"Updated overall average: {updated_avg:.2f}\n")
+    print(f"{subjects[i]} : {score} Grade {grade}")
 
+# Total and average
+total = sum(marks)
+average = round(total / len(marks), 2)
 
-### --- Task 3: Class Performance Summary --- ###
+print("\nTotal Marks:", total)
+print("Average:", average)
 
-print("--- Task 3: Class Report ---")
+# Highest and lowest subjects
+highest = max(marks)
+lowest = min(marks)
+
+high_index = marks.index(highest)
+low_index = marks.index(lowest)
+
+print("Highest:", subjects[high_index], highest)
+print("Lowest:", subjects[low_index], lowest)
+
+# While loop to add subjects
+print("\n--- Add New Subjects ---")
+
+new_count = 0
+
+while True:
+
+    subject = input("Enter subject name (or 'done'): ")
+
+    if subject.lower() == "done":
+        break
+
+    mark_input = input("Enter marks (0-100): ")
+
+    if not mark_input.isdigit():
+        print("Invalid marks. Please enter a number.")
+        continue
+
+    mark = int(mark_input)
+
+    if mark < 0 or mark > 100:
+        print("Marks must be between 0 and 100.")
+        continue
+
+    subjects.append(subject)
+    marks.append(mark)
+    new_count += 1
+
+print("\nNew subjects added:", new_count)
+
+new_average = round(sum(marks) / len(marks), 2)
+print("Updated Average:", new_average)
+
+# -----------------------------
+# Task 3 — Class Performance Summary
+# -----------------------------
+
+print("\n--- Class Performance ---\n")
+
 class_data = [
     ("Ayesha Sharma",  [88, 72, 95, 60, 78]),
     ("Rohit Verma",    [55, 68, 49, 72, 61]),
@@ -113,66 +152,75 @@ class_data = [
     ("Sneha Pillai",   [75, 80, 70, 68, 85]),
 ]
 
+print("Name              | Average | Status")
+print("----------------------------------------")
+
 pass_count = 0
 fail_count = 0
-student_averages = []
+
 topper_name = ""
-max_avg = -1
+topper_avg = 0
 
-print(f"{'Name':<18} | {'Average':<7} | {'Status'}")
-print("-" * 40)
+total_avg_sum = 0
 
-for name, m_list in class_data:
-    avg = sum(m_list) / len(m_list)
-    student_averages.append(avg)
-    status = "Pass" if avg >= 60 else "Fail"
-    
-    if status == "Pass": pass_count += 1
-    else: fail_count += 1
-    
-    if avg > max_avg:
-        max_avg = avg
+for name, marks in class_data:
+
+    avg = round(sum(marks) / len(marks), 2)
+    total_avg_sum += avg
+
+    if avg >= 60:
+        status = "Pass"
+        pass_count += 1
+    else:
+        status = "Fail"
+        fail_count += 1
+
+    if avg > topper_avg:
+        topper_avg = avg
         topper_name = name
-        
-    print(f"{name:<18} |  {avg:>5.2f}  | {status}")
 
-class_avg = sum(student_averages) / len(student_averages)
+    print(f"{name:<18} | {avg:6} | {status}")
 
-print("-" * 40)
-print(f"Passed: {pass_count}, Failed: {fail_count}")
-print(f"Class Topper: {topper_name} ({max_avg:.2f})")
-print(f"Class Average: {class_avg:.2f}\n")
+class_average = round(total_avg_sum / len(class_data), 2)
 
+print("\nStudents Passed:", pass_count)
+print("Students Failed:", fail_count)
+print("Class Topper:", topper_name, topper_avg)
+print("Class Average:", class_average)
 
-### --- Task 4: String Manipulation Utility --- ###
+# -----------------------------
+# Task 4 — String Manipulation
+# -----------------------------
 
-print("--- Task 4: Essay Utility ---")
+print("\n--- Essay Processing ---\n")
+
 essay = "  python is a versatile language. it supports object oriented, functional, and procedural programming. python is widely used in data science and machine learning.  "
 
-# 1. Strip
+# Step 1: Strip whitespace
 clean_essay = essay.strip()
-print(f"1. Clean Essay: {clean_essay}")
+print("Stripped Essay:\n", clean_essay)
 
-# 2. Title Case
-print(f"2. Title Case: {clean_essay.title()}")
+# Step 2: Title case
+print("\nTitle Case:\n", clean_essay.title())
 
-# 3. Count Python (Case-insensitive)
-# Note: Since the prompt says clean_essay is already lowercase from step 1
-print(f"3. 'python' count: {clean_essay.count('python')}")
+# Step 3: Count python
+count_python = clean_essay.count("python")
+print("\n'python' count:", count_python)
 
-# 4. Replace
-replaced_essay = clean_essay.replace("python", "Python 🐍")
-print(f"4. Replaced: {replaced_essay}")
+# Step 4: Replace python
+replaced = clean_essay.replace("python", "Python 🐍")
+print("\nReplaced Text:\n", replaced)
 
-# 5. Split into sentences
+# Step 5: Split sentences
 sentences = clean_essay.split(". ")
-print(f"5. Sentences List: {sentences}")
+print("\nSentence List:", sentences)
 
-# 6. Numbered sentences
-print("6. Numbered Sentences:")
-for i, sentence in enumerate(sentences, 1):
-    # Ensure it ends with a period
-    final_sentence = sentence.strip()
-    if not final_sentence.endswith("."):
-        final_sentence += "."
-    print(f"{i}. {final_sentence}")
+# Step 6: Print numbered sentences
+print("\nNumbered Sentences:")
+
+for i, sentence in enumerate(sentences, start=1):
+
+    if not sentence.endswith("."):
+        sentence += "."
+
+    print(f"{i}. {sentence}")
